@@ -2,6 +2,7 @@ public class Player extends Entity {
 
     private Race race;
     private RPGClass rpgClass;
+    private int points;
 
     public void ApplieRaceBonus(){
         setStrength(getStrength() + race.getStrength());
@@ -17,9 +18,23 @@ public class Player extends Entity {
         setMana(getMana() + rpgClass.getMana());
     }
 
+    public void ApplieBonus(){
+        ApplieRaceBonus();
+        ApplieClassBonus();
+    }
+
     public void AttributesCalculation(){
         setHealth(rpgClass.getHealth() + HealthMod());
         setMana(rpgClass.getMana() + ManaMod());
+    }
+
+    public void resetBaseAttributes(){
+        setStrength(10);
+        setDexterity(10);
+        setConstitution(10);
+        setIntelligence(10);
+        setWisdom(10);
+        setCharisma(10);
     }
 
     public int HealthMod(){ return (getConstitution() - 10) / 2;}
@@ -39,4 +54,8 @@ public class Player extends Entity {
 
     public Race getRpgRace() {return race;}
     public void setRpgRace(Race race) {this.race = race;}
+
+    public int getPoints() {return points;}
+    public void setPoints(int points) {this.points = points;}
+    public void resetPoints() { setPoints(20);}
 }
