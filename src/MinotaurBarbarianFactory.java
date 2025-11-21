@@ -1,11 +1,11 @@
-public class DefaultPlayerFactory implements PlayerFactory {
+public class MinotaurBarbarianFactory implements PresetPlayerFactory {
     @Override
-    public Player createPlayer(String name, Race race, RPGClass rpgClass) {
+    public Player createPlayer(String name) {
         Player player = new Player();
 
         player.setName(name);
-        player.setRpgRace(race);
-        player.setRpgClass(rpgClass);
+        player.setRpgRace(Race.MINOTAUR);
+        player.setRpgClass(RPGClass.BARBARIAN);
 
         player.resetBaseAttributes();
         player.resetPoints();

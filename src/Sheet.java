@@ -11,8 +11,7 @@ public class Sheet {
 
         int opcao = -1;
 
-        Player player = new Player();
-        DefaultPlayerFactory factory = new DefaultPlayerFactory();
+        Player player = null;
 
         while (opcao != 0){
 
@@ -29,7 +28,7 @@ public class Sheet {
             scanner.nextLine();
 
             switch (opcao){
-                case 1: player = CreatePlayer(factory); break;
+                case 1: player = CreatePlayer(player); break;
                 case 2: EditSheet(player); break;
                 case 3: PlayerSheet(player); break;
                 case 0: break;
@@ -37,26 +36,69 @@ public class Sheet {
         }
     }
 
-    public static Player CreatePlayer(DefaultPlayerFactory factory) {
+    public static Player CreatePlayer(Player player) {
 
         ClearConsole();
         System.out.print("========== CRIAR FICHA ==========\n");
         System.out.print(" NOME: ");
-
         String name = scanner.nextLine();
-        Race race = PlayerRace();
-        RPGClass rpgClass = PlayerClass();
 
-        Player player = factory.createPlayer(name, race, rpgClass);
+        ClearConsole();
+        int opcao = -1;
+        System.out.print("Gostaria de utilizar um preset?\n");
+        System.out.print("   1 - SIM        2 - NÃO    \n");
+        System.out.print("Escolha uma opcao: ");
+        opcao = scanner.nextInt();
+        scanner.nextLine();
+
+        switch (opcao) {
+            case 1:
+                player = CreatePresetPlayer(player, name);
+                break;
+            case 2:
+                DefaultPlayerFactory factory = new DefaultPlayerFactory();
+                Race race = PlayerRace();
+                RPGClass rpgClass = PlayerClass();
+
+                player = factory.createPlayer(name, race, rpgClass);
+                break;
+        }
 
         ClearConsole();
         System.out.print("= PERSONAGEM CRIADO COM SUCESSO =");
         return player;
     }
 
+    public static Player CreatePresetPlayer(Player player, String name) {
+        ClearConsole();
+        int opcao = -1;
+        System.out.print("========= PRESETS =========\n");
+        System.out.print("    1 - Arcanista Elfo       \n");
+        System.out.print("    2 - Barbaro Minotauro         \n");
+        System.out.print("    3 - Paladino Humano          \n");
+        System.out.print("Escolha uma opcao: ");
+        opcao = scanner.nextInt();
+        scanner.nextLine();
+
+        switch (opcao) {
+            case 1:
+                ElfArcanistFactory elfArcanistFactory = new ElfArcanistFactory();
+                player = elfArcanistFactory.createPlayer(name);
+                break;
+            case 2:
+                MinotaurBarbarianFactory minotaurBarbarianFactory = new MinotaurBarbarianFactory();
+                player = minotaurBarbarianFactory.createPlayer(name);
+                break;
+            case 3:
+                HumanPaladinFactory humanPaladinFactory = new HumanPaladinFactory();
+                player = humanPaladinFactory.createPlayer(name);
+                break;
+        }
+        return player;
+    }
+
     public static RPGClass PlayerClass(){
         int opcao = -1;
-
         ClearConsole();
         System.out.print("==========   CLASSES   ==========\n");
         RPGClass[] classes = RPGClass.values();
@@ -195,6 +237,11 @@ public class Sheet {
     }
 
     public static void PlayerSheet(Player player){
+        if (player == null || player.getName() == null || player.getName().isEmpty()){
+            System.out.println("Nenhum personagem criado. Crie um personagem primeiro.");
+            Wait();
+            return;
+        }
         String opcao;
         ClearConsole();
         System.out.print("=========== FICHA ==============\n");
